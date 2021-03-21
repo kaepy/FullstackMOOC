@@ -1,0 +1,37 @@
+title 0-6_uusi-muistiinpano
+
+actor käyttäjä
+
+note over käyttäjä:
+Luodaan uusi muistiinpano
+end note
+
+käyttäjä->selain: Tallenna nappia painetaan
+
+note over selain:
+haetaan lomake-elementti sivulta
+end note
+
+note over selain:
+rekisteröidään event handler
+end note
+
+note over selain:
+estetään lomakkeen lähetyksen 
+oletusarvoisen toiminnan
+end note
+
+note over selain:
+luodaan musitiinpano listalle
+end note
+
+note over selain:
+piirretään ruudun sisältö uudelleen
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+palvelin-->selain: HTTP Status Code: 201 Created
+
+note over selain:
+Selain pysyy samalla sivulla ja muita HTTP-pyyntöjä ei suoriteta.
+end note
