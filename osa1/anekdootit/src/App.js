@@ -1,3 +1,6 @@
+// 1.12*: anekdootit step 1
+// Laajenna seuraavaa sovellusta siten, että siihen tulee nappi, jota painamalla sovellus näyttää satunnaisen ohjelmistotuotantoon liittyvän anekdootin.
+
 import React, { useState } from 'react'
 
 const App = () => {
@@ -13,11 +16,26 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+
+  const handleRandom = () => {
+    // // palauttaa random integerin 0 ja 6 väliltä
+    setSelected(Math.floor(Math.random() * anecdotes.length))
+    console.log(selected)
+  }
+
   return (
     <div>
-      {anecdotes[selected]}
+      {anecdotes[selected]} <br/>
+      <Button handleClick={handleRandom} text='next anecdote' />
     </div>
   )
 }
+
+// palautteenanto nappi
+const Button = ({handleClick, text}) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
 
 export default App
