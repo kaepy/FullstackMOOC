@@ -1,5 +1,5 @@
-// 1.8: unicafe step3
-// Refaktoroi sovelluksesi siten, että tilastojen näyttäminen on eriytetty oman komponentin Statistics vastuulle. Sovelluksen tila säilyy edelleen juurikomponentissa App.
+// 1.9: unicafe step 4
+// Muuta sovellusta siten, että numeeriset tilastot näytetään ainoastaan, jos palautteita on jo annettu
 
 import React, { useState } from 'react'
 
@@ -10,9 +10,6 @@ const App = () => {
   const [bad, setBad] = useState(0)
 
   const [arr, setArry] = useState([])
-
-  //setAll(all.length)
-  //const avg = (sum / all.length) || 0;
 
   const handleGood = () => {
      setGood(good + 1)
@@ -41,7 +38,6 @@ const App = () => {
   )
 }
 
-// Uusiokäytettävä nappi
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
     {text}
@@ -54,21 +50,25 @@ const Statistics = (props) => {
   let arrAvg = 0
   let positive = 0
 
-  // JS ei tykkää 0:lla jakamisesta, joten lähtötilanne NaN
-  if (arrSum > 0){ 
+  if (arrSum > 0){
+
     arrAvg = props.arr.reduce((a,b) => a + b, 0) / arrSum
     positive = props.good * 100 / arrSum
-  }
 
+    return (
+      <p>
+        good {props.good}<br/>
+        neutral {props.neutral}<br/>
+        bad {props.bad}<br/>
+        all {arrSum}<br/>
+        average {arrAvg}<br/>
+        positive {positive} %<br/>
+      </p>
+    )
+  } 
+  
   return (
-    <p>
-      good {props.good}<br/>
-      neutral {props.neutral}<br/>
-      bad {props.bad}<br/>
-      all {arrSum}<br/>
-      average {arrAvg}<br/>
-      positive {positive} %<br/>
-    </p>
+    <p>No feedback given</p>
   )
 }
 
