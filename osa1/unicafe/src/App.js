@@ -1,8 +1,12 @@
-// 1.9: unicafe step 4
-// Muuta sovellusta siten, että numeeriset tilastot näytetään ainoastaan, jos palautteita on jo annettu
+// 1.10: unicafe step 5
+// Eriytä seuraavat kaksi komponenttia:
+// - Button vastaa yksittäistä palautteenantonappia
+// - StatisticLine huolehtii tilastorivien, esim. keskiarvon näyttämisestä
+// Komponentti StatisticLine näyttää aina yhden tilastorivin, joten sovellus käyttää montaa komponenttia kaikkien tilastorivien renderöintiin
 
 import React, { useState } from 'react'
 
+// sovelluksen tila pysyy kokoajan juurikomponentissa App
 const App = () => {
   // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
@@ -38,12 +42,14 @@ const App = () => {
   )
 }
 
+// palautteenanto nappi
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}>
     {text}
   </button>
 )
 
+// tilastorivien näyttäminen
 const Statistics = (props) => {
   // aina jos arr muuttuu (tilan kautta) niin komponentti renderöidään kokonaan uusiks, siten myös arrAvg lasketaan uudelleen joka kerta, joten pelkkä muuttuja riittää. Ei tarvitse olla apufunktioita.
   const arrSum = props.arr.length
@@ -56,19 +62,25 @@ const Statistics = (props) => {
     positive = props.good * 100 / arrSum
 
     return (
-      <p>
-        good {props.good}<br/>
-        neutral {props.neutral}<br/>
-        bad {props.bad}<br/>
-        all {arrSum}<br/>
-        average {arrAvg}<br/>
-        positive {positive} %<br/>
-      </p>
+      <div>
+        <StatisticLine value={props.good} text="good" />
+        <StatisticLine value={props.neutral} text="neutral" />
+        <StatisticLine value={props.bad} text="bad" />
+        <StatisticLine value={arrSum} text="all" />
+        <StatisticLine value={arrAvg} text="average" />
+        <StatisticLine value={positive} text="positive" text2="%" />
+      </div>
     )
   } 
   
   return (
     <p>No feedback given</p>
+  )
+}
+
+const StatisticLine = (props) => {
+  return(
+    <p>{props.text} {props.value} {props.text2}</p>
   )
 }
 
