@@ -1,8 +1,6 @@
-// 1.10: unicafe step 5
-// Eriytä seuraavat kaksi komponenttia:
-// - Button vastaa yksittäistä palautteenantonappia
-// - StatisticLine huolehtii tilastorivien, esim. keskiarvon näyttämisestä
-// Komponentti StatisticLine näyttää aina yhden tilastorivin, joten sovellus käyttää montaa komponenttia kaikkien tilastorivien renderöintiin
+// 1.11*: unicafe step 6
+// Toteuta tilastojen näyttäminen HTML:n taulukkona.
+// Muista pitää konsoli koko ajan auki. Huolehdi aina, että konsolissa ei näy mitään warningeja!
 
 import React, { useState } from 'react'
 
@@ -63,12 +61,16 @@ const Statistics = (props) => {
 
     return (
       <div>
-        <StatisticLine value={props.good} text="good" />
-        <StatisticLine value={props.neutral} text="neutral" />
-        <StatisticLine value={props.bad} text="bad" />
-        <StatisticLine value={arrSum} text="all" />
-        <StatisticLine value={arrAvg} text="average" />
-        <StatisticLine value={positive} text="positive" text2="%" />
+        <table>
+          <tbody>
+            <StatisticLine value={props.good} text="good" />
+            <StatisticLine value={props.neutral} text="neutral" />
+            <StatisticLine value={props.bad} text="bad" />
+            <StatisticLine value={arrSum} text="all" />
+            <StatisticLine value={arrAvg} text="average" />
+            <StatisticLine value={positive} text="positive" text2="%" />
+          </tbody>
+        </table>
       </div>
     )
   } 
@@ -80,7 +82,10 @@ const Statistics = (props) => {
 
 const StatisticLine = (props) => {
   return(
-    <p>{props.text} {props.value} {props.text2}</p>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value} {props.text2}</td>
+    </tr>
   )
 }
 
