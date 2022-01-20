@@ -1,6 +1,5 @@
-// 1.13*: anekdootit step 2
-// Laajenna sovellusta siten, että näytettävää anekdoottia on mahdollista äänestää. 
-// Huom: kunkin anekdootin äänet kannattanee tallettaa komponentin tilassa olevan olion kenttiin tai taulukkoon. Muista, että tilan oikeaoppinen päivittäminen edellyttää olion tai taulukon kopioimista.
+// 1.14*: anekdootit step 3
+// Näytää eniten ääniä saaneen anekdootin. Jos suurimman äänimäärän saaneita anekdootteja on useita, riittää että niistä näytetään yksi.
 
 import React, { useState } from 'react'
 
@@ -16,6 +15,7 @@ const App = () => {
   ]
   
   const [selected, setSelected] = useState(0)
+  const [mostVoted, setMostVoted] = useState(0)
 
   // komponentin tilassa oleva olio
   const [points, setPoints] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 })
@@ -26,17 +26,32 @@ const App = () => {
   }
 
   const handleVote = () => {
-    const copy = { ...points } // kopioidaan olio.
-    copy[selected] += 1   // kasvatetaan selectedin mukaisen olion kentän arvoa yhdellä
-    setPoints(copy)
+    const newPoints = { ...points } // kopioidaan olio.
+    newPoints[selected] += 1   // kasvatetaan selectedin mukaisen olion kentän arvoa yhdellä
+    setPoints(newPoints) // Tehdään pyyntö Reactille päivittää pointsin tilaa, eli points ei muutu vielä tällä rivillä vaan "joskus myöhemmin" kun "oma koodi" on suoritettu
+    console.log(newPoints)
+    console.log(points)
+    if (newPoints[selected] > newPoints[mostVoted]){
+      setMostVoted(selected)
+
+    }
+
+    console.log('selected', selected)
+    console.log('points', points[selected])
+    console.log('most voted', mostVoted)
+    console.log('voted', points[mostVoted])
   }
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       {anecdotes[selected]} <br/>
       has {points[selected]} votes <br/>
       <Button handleClick={handleVote} text='vote' />
       <Button handleClick={handleRandom} text='next anecdote' />
+      <h2>Anecdote with most votes</h2>
+      {anecdotes[mostVoted]} <br/>
+      has {points[mostVoted]} votes <br/>
     </div>
   )
 }
