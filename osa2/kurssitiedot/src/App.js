@@ -1,5 +1,7 @@
-// 2.2: kurssitiedot step 7
-// Ilmoita myös kurssin yhteenlaskettu tehtävien lukumäärä
+// 2.3*: kurssitiedot step 8
+
+// Pro tip 1: Nuolifunktion muuttaminen pidempään muotoon console.login käyttöä varten map/reduce metodien kanssa
+// Pro tip 2: VS Codeen on asennettavissa laajennus, jonka avulla nuolifunktion lyhyen muodon voi muuttaa automaattisesti pidemmäksi muodoksi ja päinvastoin
 
 import React from 'react'
 
@@ -65,7 +67,8 @@ const Header = (props) => {
 const Content = (props) => {
   //console.log(props)
 
-  const totalExercises = props.course.parts.reduce((sum, part) => sum + part.exercises, 0)
+  // Pro tip 3: Mikäli console.login haluaa vain pikaisesti ujuttaa koodiin nuolifunktiota muuttamatta
+  const totalExercises = props.course.parts.reduce((sum, part) => console.log('hello', sum, part) || sum + part.exercises, 0)
 
   return (
     <div>
