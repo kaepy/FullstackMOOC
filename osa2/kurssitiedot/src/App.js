@@ -1,8 +1,5 @@
-// 2.1: kurssitiedot step6
-// Viimeistellään nyt tehtävien 1.1-1.5 kurssin sisältöjä renderöivän ohjelman koodi.
-// Määritellään Course komponentti jonka vastuulla on kurssin ja osien renderöinti
-// Poistetaan tehtävien yhteenlaskettu lukumäärä
-// Refaktoroidaan niin että sovellus toimii riippumatta kurssissa olevien osien määrästä (Map)
+// 2.1: kurssitiedot step 6
+// Poistettiin lista rakenne partsien renderöinniltä
 
 import React from 'react'
 
@@ -25,6 +22,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
@@ -46,7 +48,7 @@ const Course = (props) => {
 }
 
 const Header = (props) => {
-  console.log(props)
+  //console.log(props)
   return (
     <div>
       <h1>{props.course.name}</h1>
@@ -55,31 +57,33 @@ const Header = (props) => {
 }
 
 const Content = (props) => {
+  //let totalExercises = props.course.parts.reduce((sum, part) => sum + part.exercises, 0)
 
   return (
     <div>
-      <ul>
       {props.course.parts.map(part =>
-        <Part key={part.id} part={part.name} exercises={part.exercises}/>
+        <Part part={part.name} exercises={part.exercises}/>
       )}
-      </ul>
+      {/*<Total totalExercises={totalExercises} />*/}
     </div>
   )
 }
 
 const Part = (props) => {
-  console.log(props)
+  //console.log(props)
   return (
-      <li>{props.part} {props.exercises}</li>
+      <p>{props.part} {props.exercises}</p>
   )
 }
 
-/* Tässä vaiheessa siis tehtävien yhteenlaskettua lukumäärää ei vielä tarvita.
+/*
 const Total = (props) => {
-  console.log(props)
+  //console.log(props)
+
+
   return (
     <div>
-      <p>Number of exercises {props.course.parts[0].exercises + props.course.parts[0].exercises + props.course.parts[0].exercises}</p>
+      <p><b>total of {props.totalExercises} exercises</b></p>
     </div>
   )
 }
