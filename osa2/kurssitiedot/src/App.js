@@ -1,5 +1,5 @@
-// 2.1: kurssitiedot step 6
-// Poistettiin lista rakenne partsien renderöinniltä
+// 2.2: kurssitiedot step 7
+// Ilmoita myös kurssin yhteenlaskettu tehtävien lukumäärä
 
 import React from 'react'
 
@@ -31,6 +31,8 @@ const App = () => {
     ]
   }
 
+  //console.log(props)
+
   return (
     <div>
       <Course course={course} />
@@ -38,7 +40,9 @@ const App = () => {
   )
 }
 
+// kurssin muotoilu
 const Course = (props) => {
+  //console.log(props)
   return (
     <div>
       <Header course={props.course} />
@@ -47,6 +51,7 @@ const Course = (props) => {
   )
 }
 
+// otsikon näyttäminen
 const Header = (props) => {
   //console.log(props)
   return (
@@ -56,19 +61,23 @@ const Header = (props) => {
   )
 }
 
+// kurssin sisällön muotoilu ja harjoitusten totaalin laskenta
 const Content = (props) => {
-  //let totalExercises = props.course.parts.reduce((sum, part) => sum + part.exercises, 0)
+  //console.log(props)
+
+  const totalExercises = props.course.parts.reduce((sum, part) => sum + part.exercises, 0)
 
   return (
     <div>
       {props.course.parts.map(part =>
-        <Part part={part.name} exercises={part.exercises}/>
+        <Part key={part.id} part={part.name} exercises={part.exercises}/>
       )}
-      {/*<Total totalExercises={totalExercises} />*/}
+      <Total totalExercises={totalExercises} />
     </div>
   )
 }
 
+// osien näyttäminen
 const Part = (props) => {
   //console.log(props)
   return (
@@ -76,17 +85,14 @@ const Part = (props) => {
   )
 }
 
-/*
+// totaalin näyttäminen
 const Total = (props) => {
   //console.log(props)
-
-
   return (
     <div>
       <p><b>total of {props.totalExercises} exercises</b></p>
     </div>
   )
 }
-*/
 
 export default App
