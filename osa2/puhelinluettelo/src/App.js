@@ -2,7 +2,9 @@
 // Toteutetaan henkilön lisäys puhelinluetteloon
 
 import React, { useState } from 'react'
-import Person from './components/Person'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = (props) => {
   const [persons, setPersons] = useState([ 
@@ -14,7 +16,7 @@ const App = (props) => {
 
   const [newName, setNewName] = useState('') // lomakkeen syöte
   const [newNumber, setNewNumber] = useState('')
-  const [newFilter, setNewFilter] = useState('')
+  const [filter, setFilter] = useState('')
   //const [showAll, setShowAll] = useState(true)
   //console.log('persons', persons)
   //console.log('newName', newName)
@@ -54,51 +56,31 @@ const App = (props) => {
     setNewNumber(event.target.value)
   }
 
-  const handleNewFilter = (event) => {
+  const handleFilterChange = (event) => {
     console.log(event.target.value)
-    setNewFilter(event.target.value)
+    setFilter(event.target.value)
   }
 
-  const personsToShow = !newFilter //ehto
+  const personsToShow = !filter //ehto
     ? persons // true
-    // luodaan uusi array jossa on kaikki 
-    : persons.filter(person => person.name.toLowerCase().startsWith(newFilter.toLowerCase())) // false, luo uuden arrayn
+    // startsWith tai includes käy riippuen tarpeesta
+    : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase())) // false, luo uuden arrayn
 
   console.log('App toimii...')
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-          filter shown with <input value={newFilter} onChange={handleNewFilter} />
-      </div>
-      
-        {/*</div>() => setShowAll(!showAll) //muuta showAll falseksi
-          show {showAll ? 'important' : 'all' }*/}
-
+      <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
       <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <div> 
-        //nyt ei haluta käydä kaikkia läpi vaan ainoastaan showAll tai filteröity uusi array
-        {personsToShow.map(person => console.log('Map', person) ||
-          <Person key={person.name} person={person} />
-          )}
-      </div>
+      <Persons personsToShow={personsToShow} />
+
        {/*<div>debug: {newName} {newNumber}</div>*/}
-       <div>debug: {newFilter}</div>
+       {/*<div>debug: {newFilter}</div>*/}
     </div>
   )
 
