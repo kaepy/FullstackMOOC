@@ -5,10 +5,12 @@ import React, { useState } from 'react'
 import Person from './components/Person'
 
 const App = (props) => {
-  const [persons, setPersons] = useState([ { name: 'Arto Hellas' } ]) // puhelinluettelon persoonat
+  const [persons, setPersons] = useState([ { name: 'Arto Hellas', number: '040-1231244' } ]) // puhelinluettelon persoonat
   const [newName, setNewName] = useState('') // lomakkeen syöte
-  console.log('persons', persons)
-  console.log('newName', newName)
+  const [newNumber, setNewNumber] = useState('')
+  //console.log('persons', persons)
+  //console.log('newName', newName)
+  //console.log('newNumber', newNumber)
 
   // uuden henkilön lisääminen
   const addPerson = (event) => {
@@ -21,11 +23,13 @@ const App = (props) => {
       window.alert(`${newName} is already added to phonebook`)
     } else {
       const personObject = {
-      name: newName
+      name: newName,
+      number: newNumber
       }
 
       setPersons(persons.concat(personObject)) // Uusi persoona lisätään vanhojen joukkoon
       setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
+      setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
     }
 
     //setNewName tyhjennys ei tapahdu tässä jottei typon takia tyhjennetä kenttää
@@ -35,6 +39,11 @@ const App = (props) => {
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
+  }
+
+  const handleNumberChange = (event) => {
+    console.log(event.target.value)
+    setNewNumber(event.target.value)
   }
 
   console.log('App toimii...')
@@ -47,6 +56,9 @@ const App = (props) => {
           name: <input value={newName} onChange={handleNameChange} />
         </div>
         <div>
+          number: <input value={newNumber} onChange={handleNumberChange} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
@@ -56,7 +68,7 @@ const App = (props) => {
           <Person key={person.name} person={person} />
           )}
       </div>
-      /* <div>debug: {newName}</div> */
+       <div>debug: {newName} {newNumber}</div> 
     </div>
   )
 
