@@ -1,19 +1,15 @@
 // 2.6: puhelinluettelo step 1
 // Toteutetaan henkilön lisäys puhelinluetteloon
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import axios from 'axios'
 
 const App = (props) => {
-  const [persons, setPersons] = useState([ 
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) // puhelinluettelon persoonat
-
+  
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') // lomakkeen syöte
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
@@ -21,6 +17,15 @@ const App = (props) => {
   //console.log('persons', persons)
   //console.log('newName', newName)
   //console.log('newNumber', newNumber)
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+    }, [])
 
   // uuden henkilön lisääminen
   const addPerson = (event) => {
