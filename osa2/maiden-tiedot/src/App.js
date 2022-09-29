@@ -4,12 +4,9 @@ import Filter from './components/Filter'
 import Countries from './components/Countries'
 
 const App = () => {
-  
+
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
-
-  // const [newCountry, setNewCountry] = useState([])
-  // const [showMaxTenCountries, setShowMaxTenCountries] = useState(true)
 
   const hook = () => {
     console.log('effect')
@@ -18,8 +15,8 @@ const App = () => {
       .then(response => {
         setCountries(response.data)
       })
-  } 
-  useEffect (hook, [])
+  }
+  useEffect(hook, [])
 
   console.log(countries)
 
@@ -28,16 +25,23 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-
+  // ternaryitä ei yleensä normaalioloissa suvaita monirivittää
+  // vaihtoehtonen tässä vois olla ottaa mallia siitä "palastelusta ja verboosimmaks tekemisestä"
+  // Yleensä on myös tapana kirjottaa if-elset (ja myös ternary koska sehän on if-else) niinpäin että ehdossa ei oo negaatiota ("jos jotain niin tätä tai muuten tota" vs "jos ei jotain niin tota tai muuten tätä"), ja yleensä myös suositeltavaa olla täsmällisempi eli tässä tapauksessa filtteröidään vaan jos filtter on jotain muuta ku tyhjä string
+  /*
   const countriesToShow = !filter //ehto
     ? [] //true, oletuksena ei listata mitään
     : countries.filter(country => country.name.common.toLowerCase().includes(filter.toLowerCase())) //false, listataan filteröidyt
+    */
+
+  const countryFilter = country => country.name.common.toLowerCase().includes(filter.toLowerCase());
+  const countriesToShow = filter !== '' ? countries.filter(countryFilter) : [];
 
   return (
     <div>
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
-      <Countries countriesToShow={countriesToShow} />
+      <Countries countriesToShow={countriesToShow} setFilter={setFilter} />
 
     </div>
   )

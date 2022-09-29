@@ -2,7 +2,7 @@ import React from 'react'
 import Country from './Country'
 import CountryDetails from './CountryDetails'
 
-const Countries = ({ countriesToShow }) => {
+const Countries = ({ countriesToShow, setFilter}) => {
 
   if (countriesToShow.length > 10){
     return (
@@ -14,7 +14,7 @@ const Countries = ({ countriesToShow }) => {
     return (
         <div>
           {countriesToShow.map(country => console.log('Map', country) ||
-            <Country key={country.name.common} country={country} />
+            <Country key={country.name.common} country={country} setFilter={setFilter} />
             )}
         </div>
     )

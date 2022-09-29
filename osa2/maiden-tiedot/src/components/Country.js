@@ -1,8 +1,9 @@
 import React from 'react'
 
-const Country = ({ country }) => {
+const Country = ({ country, setFilter }) => {
   return (
-    <div>{country.name.common}</div>
+    <div>{country.name.common} 
+    <button onClick={() => setFilter(country.name.common)}>show</button></div>
   )
 }
 
