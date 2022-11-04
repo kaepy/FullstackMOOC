@@ -54,6 +54,18 @@ const App = () => {
 
   }
 
+  const removePersonOf = id => {
+    const person = persons.find(n => n.id === id)
+
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      // tyhjän () tilalla vois olla vaikka removeResponse joka tosin ei kiinnosta meitä, mutta siinä voisi periaatteessa olla joku poisto-operaation kuittaus tms vastaus jos tää olis hieno softa
+      // Oletuksella tietysti että se backend vastaa poistoon vasta kun se on poistettu, mitä se kyllä tekee jos sitä ei oo erikseen koodannu asynkronista poistoa
+      personService.remove(id).then(() => {
+        personService.getAll().then(allPersonsResponse => setPersons(allPersonsResponse.data))
+      })
+    }
+  }
+
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -85,10 +97,8 @@ const App = () => {
       <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} removePerson={removePersonOf} />
 
-      {/*<div>debug: {newName} {newNumber}</div>*/}
-      {/*<div>debug: {newFilter}</div>*/}
     </div>
   )
 
