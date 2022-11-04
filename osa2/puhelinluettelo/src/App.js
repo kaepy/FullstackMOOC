@@ -7,16 +7,12 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import axios from 'axios'
 
-const App = (props) => {
+const App = () => {
   
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') // lomakkeen syöte
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  //const [showAll, setShowAll] = useState(true)
-  //console.log('persons', persons)
-  //console.log('newName', newName)
-  //console.log('newNumber', newNumber)
 
   useEffect(() => {
     console.log('effect')
@@ -42,9 +38,16 @@ const App = (props) => {
       number: newNumber
       }
 
-      setPersons(persons.concat(personObject)) // Uusi persoona lisätään vanhojen joukkoon
-      setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
-      setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          // Asetetaan response-oliosta kentän data arvona oleva uusi persoona muiden joukkoon luomalla uuden taulukon
+          // Palvelin lisää persoonalle id-tunnisteen automaattisesti joten sitä ei tarvita erikseen määritellä
+          setPersons(persons.concat(response.data)) 
+          setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
+          setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
+        })
+
     }
 
     //setNewName tyhjennys ei tapahdu tässä jottei typon takia tyhjennetä kenttää
