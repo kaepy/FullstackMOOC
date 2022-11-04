@@ -9,6 +9,8 @@ const create = newObject => {
   return axios.post(baseUrl, newObject)
 }
 
+// palauttaa koko response objektin
+// responsesta voisi myös poimia pelkän response.data:n
 const update = (id, newObject) => {
   return axios.put(`${baseUrl}/${id}`, newObject)
 }

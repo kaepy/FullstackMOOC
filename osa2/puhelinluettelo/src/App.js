@@ -1,5 +1,5 @@
-// 2.16: puhelinluettelo step 7
-// Siirretään palvelimen kanssa kommunikoinnista vastaava toiminnallisuus omaan moduuliin
+// 2.18*: puhelinluettelo step 10
+// Muuta toiminnallisuutta siten, että jos jo olemassa olevalle henkilölle lisätään numero, korvaa lisätty numero aiemman numeron. Korvaaminen kannattaa tehdä HTTP PUT -pyynnöllä. Jos henkilön tiedot löytyvät jo luettelosta, voi ohjelma kysyä käyttäjältä varmistuksen.
 
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
@@ -31,7 +31,27 @@ const App = () => {
     // obj->obj vertailu ei ole mahdollista, koska ei tiedetä mitä vertailla
     // tästä syystä vertaillaan obj name tietoja keskenään
     if (persons.some(person => person.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+
+      console.log('newName ' + newName)
+      console.log('newNumber ' + newNumber)
+
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const person = persons.find(person => person.name === newName)
+        console.log('person ' + person.name)
+        console.log('person ' + person.number)
+        console.log('person ' + person.id)
+
+        const id = person.id
+
+        const changePerson = { ...person, number: newNumber }
+        console.log('change ' + changePerson.name)
+        console.log('change ' + changePerson.number)
+        console.log('change ' + changePerson.name)
+
+        personService.update(id, changePerson).then(() => {
+            personService.getAll().then(allPersonsResponse => setPersons(allPersonsResponse.data))
+        })
+      }
     } else {
       const personObject = {
         name: newName,
