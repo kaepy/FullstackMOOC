@@ -1,14 +1,14 @@
-// 2.6: puhelinluettelo step 1
-// Toteutetaan henkilön lisäys puhelinluetteloon
+// 2.16: puhelinluettelo step 7
+// Siirretään palvelimen kanssa kommunikoinnista vastaava toiminnallisuus omaan moduuliin
 
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personService from './services/persons'
 
 const App = () => {
-  
+
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') // lomakkeen syöte
   const [newNumber, setNewNumber] = useState('')
@@ -16,12 +16,12 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         setPersons(response.data)
       })
-    }, [])
+  }, [])
 
   // uuden henkilön lisääminen
   const addPerson = (event) => {
@@ -30,20 +30,20 @@ const App = () => {
 
     // obj->obj vertailu ei ole mahdollista, koska ei tiedetä mitä vertailla
     // tästä syystä vertaillaan obj name tietoja keskenään
-    if (persons.some(person => person.name === newName)){
+    if (persons.some(person => person.name === newName)) {
       window.alert(`${newName} is already added to phonebook`)
     } else {
       const personObject = {
-      name: newName,
-      number: newNumber
+        name: newName,
+        number: newNumber
       }
 
-      axios
-        .post('http://localhost:3001/persons', personObject)
+      personService
+        .create(personObject)
         .then(response => {
           // Asetetaan response-oliosta kentän data arvona oleva uusi persoona muiden joukkoon luomalla uuden taulukon
           // Palvelin lisää persoonalle id-tunnisteen automaattisesti joten sitä ei tarvita erikseen määritellä
-          setPersons(persons.concat(response.data)) 
+          setPersons(persons.concat(response.data))
           setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
           setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
         })
@@ -87,8 +87,8 @@ const App = () => {
       <h2>Numbers</h2>
       <Persons personsToShow={personsToShow} />
 
-       {/*<div>debug: {newName} {newNumber}</div>*/}
-       {/*<div>debug: {newFilter}</div>*/}
+      {/*<div>debug: {newName} {newNumber}</div>*/}
+      {/*<div>debug: {newFilter}</div>*/}
     </div>
   )
 
