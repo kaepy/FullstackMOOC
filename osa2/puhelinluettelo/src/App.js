@@ -1,18 +1,19 @@
-// 2.18*: puhelinluettelo step 10
-// Muuta toiminnallisuutta siten, että jos jo olemassa olevalle henkilölle lisätään numero, korvaa lisätty numero aiemman numeron. Korvaaminen kannattaa tehdä HTTP PUT -pyynnöllä. Jos henkilön tiedot löytyvät jo luettelosta, voi ohjelma kysyä käyttäjältä varmistuksen.
+// 2.19: puhelinluettelo step 11
+// Notifikaatio lisäykselle, muutokselle ja poistolle
 
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
-
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') // lomakkeen syöte
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -49,7 +50,10 @@ const App = () => {
         console.log('change ' + changePerson.name)
 
         personService.update(id, changePerson).then(() => {
-            personService.getAll().then(allPersonsResponse => setPersons(allPersonsResponse.data))
+          personService.getAll().then(allPersonsResponse => {
+            setPersons(allPersonsResponse.data)
+            handleNotificationChange(`Number changed for ${person.name}`)
+          })
         })
       }
     } else {
@@ -64,10 +68,10 @@ const App = () => {
           // Asetetaan response-oliosta kentän data arvona oleva uusi persoona muiden joukkoon luomalla uuden taulukon
           // Palvelin lisää persoonalle id-tunnisteen automaattisesti joten sitä ei tarvita erikseen määritellä
           setPersons(persons.concat(response.data))
+          handleNotificationChange(`Added ${newName}`)
           setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
           setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
         })
-
     }
 
     //setNewName tyhjennys ei tapahdu tässä jottei typon takia tyhjennetä kenttää
@@ -81,7 +85,11 @@ const App = () => {
       // tyhjän () tilalla vois olla vaikka removeResponse joka tosin ei kiinnosta meitä, mutta siinä voisi periaatteessa olla joku poisto-operaation kuittaus tms vastaus jos tää olis hieno softa
       // Oletuksella tietysti että se backend vastaa poistoon vasta kun se on poistettu, mitä se kyllä tekee jos sitä ei oo erikseen koodannu asynkronista poistoa
       personService.remove(id).then(() => {
-        personService.getAll().then(allPersonsResponse => setPersons(allPersonsResponse.data))
+        personService.getAll().then(allPersonsResponse => {
+          setPersons(allPersonsResponse.data)
+          handleNotificationChange(`Removed ${person.name}`)
+        }
+        )
       })
     }
   }
@@ -101,6 +109,11 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleNotificationChange = (noti) => {
+    setMessage(noti)
+    setTimeout(() => { setMessage(null) }, 5000)
+  }
+
   const personsToShow = !filter //ehto
     ? persons // true
     // startsWith tai includes käy riippuen tarpeesta
@@ -111,6 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
       <h2>Add a new</h2>
