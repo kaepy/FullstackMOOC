@@ -1,5 +1,5 @@
-// 2.19: puhelinluettelo step 11
-// Notifikaatio lisäykselle, muutokselle ja poistolle
+// 2.20*: puhelinluettelo step 12
+// Virhetilanteen hallinta jossa jo kannasta poistettua resurssia yritetään päivittää toisella selaimella
 
 import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
@@ -7,13 +7,15 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
 import Notification from './components/Notification'
+import Error from './components/Error'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('') // lomakkeen syöte
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     console.log('effect')
@@ -53,6 +55,17 @@ const App = () => {
           personService.getAll().then(allPersonsResponse => {
             setPersons(allPersonsResponse.data)
             handleNotificationChange(`Number changed for ${person.name}`)
+            setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
+            setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
+          })
+        }).catch(error => {
+          handleErrorChange(`Information of ${person.name} has already been removed from server`)
+        }).then(() => {
+          personService.getAll().then(allPersonsResponse => {
+            setPersons(allPersonsResponse.data)
+            handleNotificationChange(`Number directory updated`)
+            setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
+            setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
           })
         })
       }
@@ -109,9 +122,14 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-  const handleNotificationChange = (noti) => {
-    setMessage(noti)
+  const handleNotificationChange = (notification) => {
+    setMessage(notification)
     setTimeout(() => { setMessage(null) }, 5000)
+  }
+
+  const handleErrorChange = (error) => {
+    setError(error)
+    setTimeout(() => { setError(null) }, 5000)
   }
 
   const personsToShow = !filter //ehto
@@ -125,6 +143,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={message} />
+      <Error error={error} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
 
       <h2>Add a new</h2>
