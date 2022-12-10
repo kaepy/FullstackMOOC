@@ -80,10 +80,15 @@ const App = () => {
         .then(response => {
           // Asetetaan response-oliosta kentän data arvona oleva uusi persoona muiden joukkoon luomalla uuden taulukon
           // Palvelin lisää persoonalle id-tunnisteen automaattisesti joten sitä ei tarvita erikseen määritellä
+          // responsea voisi kutsua myös createdPersoniksi tässä kohtaa
           setPersons(persons.concat(response.data))
           handleNotificationChange(`Added ${newName}`)
           setNewName('') /// Tyhjennetään syötekenttää kontrolloiva olio
           setNewNumber('') /// Tyhjennetään syötekenttää kontrolloiva olio
+        })
+        // päästään käsiksi palvelimen virheilmoitusolioon
+        .catch(error => {
+          handleErrorChange(`${error.response.data.error}`)
         })
     }
 
